@@ -11,19 +11,26 @@ Markdown is a lightweight and easy-to-use syntax for styling your writing. It in
 ```markdown
 Syntax highlighted code block
 
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+create table CARD_TRAN as (
+select top 100 *,'TGT' as MER_NAME from "BIUSER"."CARD_TRANSACTIONS_JULY_2020" where CT_MER_ID='7010'
+union
+select top 100 *,'WAL' as MER_NAME from "BIUSER"."CARD_TRANSACTIONS_JULY_2020" where CT_MER_ID='7011'
+union
+select top 100 *,'APL' as MER_NAME from "BIUSER"."CARD_TRANSACTIONS_JULY_2020" where CT_MER_ID='6927'
+union
+select top 100 *,'MAC' as MER_NAME from "BIUSER"."CARD_TRANSACTIONS_JULY_2020" where CT_MER_ID='6059'
+union
+select top 100 *,'UNI' as MER_NAME from "BIUSER"."CARD_TRANSACTIONS_JULY_2020" where CT_MER_ID='7238'
+union
+select top 100 *,'MOB' as MER_NAME from "BIUSER"."CARD_TRANSACTIONS_JULY_2020" where CT_MER_ID='5655'
+union
+select top 100 *,'PEP' as MER_NAME from "BIUSER"."CARD_TRANSACTIONS_JULY_2020" where CT_MER_ID='5877'
+union
+select top 100 *,'COK' as MER_NAME from "BIUSER"."CARD_TRANSACTIONS_JULY_2020" where CT_MER_ID='5209'
+union
+select top 100 *,'AZ' as MER_NAME from "BIUSER"."CARD_TRANSACTIONS_JULY_2020" where CT_MER_ID='6604'
+union
+select top 100 *,'VN' as MER_NAME from "BIUSER"."CARD_TRANSACTIONS_JULY_2020" where CT_MER_ID='7897');
 ```
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
