@@ -1,15 +1,12 @@
-## Welcome to GitHub Pages
+## SAP HANA GRAPH
 
-You can use the [editor on GitHub](https://github.com/VNSHANPR/HC_TA/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+A Graph is based on Nodes and Edges. In our dataset, a Node will represent a Customer or a Merchant and an Edge will present a Transaction which happens between a customer and a Merchant. By visualizing the Transaction network graph , we can see the clusters between merchants & customers, observer anomalies , check the patterns of a Fraudulent Transaction etc.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Create EDGE TABLE 
+Transaction table with Generated merchant names to depict on the graph, We are using JULY TRANSACTION records.
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
 ```markdown
-Syntax highlighted code block
 
 create table CARD_TRAN as (
 select top 100 *,'TGT' as MER_NAME from "BIUSER"."CARD_TRANSACTIONS_JULY_2020" where CT_MER_ID='7010'
@@ -33,12 +30,59 @@ union
 select top 100 *,'VN' as MER_NAME from "BIUSER"."CARD_TRANSACTIONS_JULY_2020" where CT_MER_ID='7897');
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
-### Jekyll Themes
+### Create a Join of the Transactions data with the Merchant & customer master data:
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/VNSHANPR/HC_TA/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+```markdown
 
-### Support or Contact
+create table CARD_TRAN_FULL as (select * from CARD_TRAN a left outer join SOURCEDATA.MERCHANT_CA b on a.CT_MER_ID=b.MER_ID left outer join SOURCEDATA.CUSTOMER c on c.CUST_ID=a.CT_CUST_ID);
+```
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+### Add constraints 
+Add constraints on the generated CARD_TRAN table as this is a requirement imposed by the SAP HAAN Graph model
+
+```markdown
+
+alter table CARD_TRAN alter ("CT_CUST_ID" nvarchar(10) NOT NULL );
+alter table CARD_TRAN alter ("CT_MER_ID" integer NOT NULL);
+alter table CARD_TRAN alter ("MER_NAME" nvarchar(10) NOT NULL);
+alter table CARD_TRAN alter ("CT_ID" integer NOT NULL PRIMARY KEY);
+alter table CARD_TRAN add ("ID" integer NOT NULL UNIQUE GENERATED ALWAYS AS IDENTITY );
+```
+
+### Create Vertex/Nodes Table:
+```markdown
+drop table "BIUSER"."NODES";drop table "BIUSER"."NODES";CREATE COLUMN TABLE "BIUSER"."NODES"( "NODE_KEY" NVARCHAR(100), "TYPE" NVARCHAR(100), "NAME" NVARCHAR(100), "SEGMENT" NVARCHAR(10), "CUST_LIFE_SPEND" NVARCHAR(10), "CUST_AVG_SPEND" NVARCHAR(10), "CUST_INCOME" NVARCHAR(10), "STREET" NVARCHAR(100), "POSTCODE" NVARCHAR(100), "COUNTY" NVARCHAR(100), "STATE" NVARCHAR(10), "COUNTRY" NVARCHAR(5), "LAT" NVARCHAR(100), "LON" NVARCHAR(100));
+```
+
+### Insert data into the Nodes Table:
+
+```markdown
+insert into NODES (NODE_KEY,TYPE,NAME,SEGMENT,CUST_LIFE_SPEND,CUST_AVG_SPEND,CUST_INCOME,STREET,POSTCODE,COUNTY,STATE,COUNTRY,LAT,LON) select distinct(CT_CUST_ID), 'CUSTOMER' AS TYPE, CUST_NAME AS NAME,CUST_SEGMENT as SEGMENT,'' as CUST_LIFE_SPEND,'' as CUST_AVG_SPEND,'' as CUST_INCOME,'' as STREET,'' as POSTCODE,'' as COUNTY,'CA' as STATE,'US' AS COUNTRY,'' as LAT,'' as LON from CARD_TRAN_FULL;
+select distinct(MER_NAME),MER_ID from CARD_TRAN_FULL;
+insert into NODES (NODE_KEY,TYPE,NAME,SEGMENT,CUST_LIFE_SPEND,CUST_AVG_SPEND,CUST_INCOME,STREET,POSTCODE,COUNTY,STATE,COUNTRY,LAT,LON) select 'TGT' as NODE_KEY, 'MERCHANT' AS TYPE, 'TARGET' AS NAME,MER_SEGMENT as SEGMENT,'' as CUST_LIFE_SPEND,'' as CUST_AVG_SPEND,'' as CUST_INCOME,STREET,POSTCODE,COUNTY,'CA' as STATE,'US' AS COUNTRY,LAT,LON from SOURCEDATA.MERCHANT_CA where MER_ID='7010';
+insert into NODES (NODE_KEY,TYPE,NAME,SEGMENT,CUST_LIFE_SPEND,CUST_AVG_SPEND,CUST_INCOME,STREET,POSTCODE,COUNTY,STATE,COUNTRY,LAT,LON) select 'WAL' as NODE_KEY, 'MERCHANT' AS TYPE, 'WALMART' AS NAME,MER_SEGMENT as SEGMENT,'' as CUST_LIFE_SPEND,'' as CUST_AVG_SPEND,'' as CUST_INCOME,STREET,POSTCODE,COUNTY,'CA' as STATE,'US' AS COUNTRY,LAT,LON from SOURCEDATA.MERCHANT_CA where MER_ID='7011';
+insert into NODES (NODE_KEY,TYPE,NAME,SEGMENT,CUST_LIFE_SPEND,CUST_AVG_SPEND,CUST_INCOME,STREET,POSTCODE,COUNTY,STATE,COUNTRY,LAT,LON) select 'APL' as NODE_KEY, 'MERCHANT' AS TYPE, 'APL' AS NAME,MER_SEGMENT as SEGMENT,'' as CUST_LIFE_SPEND,'' as CUST_AVG_SPEND,'' as CUST_INCOME,STREET,POSTCODE,COUNTY,'CA' as STATE,'US' AS COUNTRY,LAT,LON from SOURCEDATA.MERCHANT_CA where MER_ID='6927';
+insert into NODES (NODE_KEY,TYPE,NAME,SEGMENT,CUST_LIFE_SPEND,CUST_AVG_SPEND,CUST_INCOME,STREET,POSTCODE,COUNTY,STATE,COUNTRY,LAT,LON) select 'MAC' as NODE_KEY, 'MERCHANT' AS TYPE, 'MAC' AS NAME,MER_SEGMENT as SEGMENT,'' as CUST_LIFE_SPEND,'' as CUST_AVG_SPEND,'' as CUST_INCOME,STREET,POSTCODE,COUNTY,'CA' as STATE,'US' AS COUNTRY,LAT,LON from SOURCEDATA.MERCHANT_CA where MER_ID='6059';
+insert into NODES (NODE_KEY,TYPE,NAME,SEGMENT,CUST_LIFE_SPEND,CUST_AVG_SPEND,CUST_INCOME,STREET,POSTCODE,COUNTY,STATE,COUNTRY,LAT,LON) select 'UNI' as NODE_KEY, 'MERCHANT' AS TYPE, 'UNI' AS NAME,MER_SEGMENT as SEGMENT,'' as CUST_LIFE_SPEND,'' as CUST_AVG_SPEND,'' as CUST_INCOME,STREET,POSTCODE,COUNTY,'CA' as STATE,'US' AS COUNTRY,LAT,LON from SOURCEDATA.MERCHANT_CA where MER_ID='7238';
+insert into NODES (NODE_KEY,TYPE,NAME,SEGMENT,CUST_LIFE_SPEND,CUST_AVG_SPEND,CUST_INCOME,STREET,POSTCODE,COUNTY,STATE,COUNTRY,LAT,LON) select 'MOB' as NODE_KEY, 'MERCHANT' AS TYPE, 'MOB' AS NAME,MER_SEGMENT as SEGMENT,'' as CUST_LIFE_SPEND,'' as CUST_AVG_SPEND,'' as CUST_INCOME,STREET,POSTCODE,COUNTY,'CA' as STATE,'US' AS COUNTRY,LAT,LON from SOURCEDATA.MERCHANT_CA where MER_ID='5655';
+insert into NODES (NODE_KEY,TYPE,NAME,SEGMENT,CUST_LIFE_SPEND,CUST_AVG_SPEND,CUST_INCOME,STREET,POSTCODE,COUNTY,STATE,COUNTRY,LAT,LON) select 'PEP' as NODE_KEY, 'MERCHANT' AS TYPE, 'PEP' AS NAME,MER_SEGMENT as SEGMENT,'' as CUST_LIFE_SPEND,'' as CUST_AVG_SPEND,'' as CUST_INCOME,STREET,POSTCODE,COUNTY,'CA' as STATE,'US' AS COUNTRY,LAT,LON from SOURCEDATA.MERCHANT_CA where MER_ID='5877';
+insert into NODES (NODE_KEY,TYPE,NAME,SEGMENT,CUST_LIFE_SPEND,CUST_AVG_SPEND,CUST_INCOME,STREET,POSTCODE,COUNTY,STATE,COUNTRY,LAT,LON) select 'AZ' as NODE_KEY, 'MERCHANT' AS TYPE, 'AZ' AS NAME,MER_SEGMENT as SEGMENT,'' as CUST_LIFE_SPEND,'' as CUST_AVG_SPEND,'' as CUST_INCOME,STREET,POSTCODE,COUNTY,'CA' as STATE,'US' AS COUNTRY,LAT,LON from SOURCEDATA.MERCHANT_CA where MER_ID='5209';
+insert into NODES (NODE_KEY,TYPE,NAME,SEGMENT,CUST_LIFE_SPEND,CUST_AVG_SPEND,CUST_INCOME,STREET,POSTCODE,COUNTY,STATE,COUNTRY,LAT,LON) select 'VN' as NODE_KEY, 'MERCHANT' AS TYPE, 'VN' AS NAME,MER_SEGMENT as SEGMENT,'' as CUST_LIFE_SPEND,'' as CUST_AVG_SPEND,'' as CUST_INCOME,STREET,POSTCODE,COUNTY,'CA' as STATE,'US' AS COUNTRY,LAT,LON from SOURCEDATA.MERCHANT_CA where MER_ID='7897';
+```
+### ADD constraint on the NODES table
+```markdown
+alter table NODES alter ("NODE_KEY" nvarchar(100) NOT NULL PRIMARY KEY );
+```
+
+### CREATE GRAPH
+```markdown
+CREATE GRAPH WORKSPACE CT_NETWORK_GRAPH2
+EDGE TABLE CARD_TRAN
+SOURCE COLUMN CT_CUST_ID
+TARGET COLUMN MER_NAME
+KEY COLUMN CT_ID
+VERTEX TABLE NODES_1
+KEY COLUMN NODE_KEY;
+
+ ```
