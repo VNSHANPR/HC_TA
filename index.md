@@ -1,4 +1,6 @@
 ![Alt text](images/logo_hc_ta.png?raw=true "Title")
+
+![image](https://user-images.githubusercontent.com/41034062/92675057-2a8cea00-f351-11ea-8454-6ad7881162a8.png)
 ## SAP HANA GRAPH
 
 A Graph is based on Nodes and Edges. In our dataset, a Node will represent a Customer or a Merchant and an Edge will present a Transaction which happens between a customer and a Merchant. By visualizing the Transaction network graph , we can see the clusters between merchants & customers, observer anomalies , check the patterns of a Fraudulent Transaction etc.
