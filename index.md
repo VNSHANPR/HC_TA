@@ -123,29 +123,40 @@ Goto Catalog --> Graph Workspace
 
 ![image](https://user-images.githubusercontent.com/41034062/93111458-3d087a00-f6e9-11ea-8dd6-e453f0fc6057.png)
 
-•	Right click graph workspaces and select show graph workspaces
+
+#### Right click graph workspaces and select show graph workspaces
+
+
 
 ![image](https://user-images.githubusercontent.com/41034062/93111622-77721700-f6e9-11ea-85d0-abd4ab58720a.png)
 
 
-Find the workspace in your schema and right click and select Open :
+
+#### Find the workspace in your schema and right click and select Open :
+
 
 ![image](https://user-images.githubusercontent.com/41034062/93111706-8f499b00-f6e9-11ea-8133-122781e3ef42.png)
 
-•	It will show the details of the EDGE and VERTEX tables
+
+#### It will show the details of the EDGE and VERTEX tables
+
 
 ![image](https://user-images.githubusercontent.com/41034062/93111796-b607d180-f6e9-11ea-8747-4677f482fddf.png)
 
 
-•	Click Glasses icon to open graph viewer
+#### Click Glasses icon to open graph viewer
+
 
 ![image](https://user-images.githubusercontent.com/41034062/93111832-c61fb100-f6e9-11ea-870b-2e4a4e9b2e4d.png)
 
-Randomly selected 200 vertexes (nodes) will be shown
+
+#### Randomly selected 200 vertexes (nodes) will be shown
+
 
 ![image](https://user-images.githubusercontent.com/41034062/93112088-21ea3a00-f6ea-11ea-9b9a-845dc2707586.png)
 
-Click Filter Select Vertex
+#### Click Filter
+Select Vertex
 Column = type
 Operator = =
 Value = Merchant
@@ -155,7 +166,7 @@ Click Add Then Apply -->
 ![image](https://user-images.githubusercontent.com/41034062/93112194-46461680-f6ea-11ea-8361-b89dc7724b1f.png)
 
 
-Only Merchants will be displayed:
+#### Only Merchants will be displayed:
 
 
 ![image](https://user-images.githubusercontent.com/41034062/93112276-61b12180-f6ea-11ea-8540-e1f976db33a6.png)
@@ -167,14 +178,16 @@ Graph will go back to normal
 
 ![image](https://user-images.githubusercontent.com/41034062/93112477-a8068080-f6ea-11ea-8f48-d9e11785623d.png)
 
-Switch to Edge filter
+
+#### Switch to Edge filter
 Add
 Dayname = SUNDAY
 Apply to show all transactions happened on Sunday
 
 ![image](https://user-images.githubusercontent.com/41034062/93112626-cff5e400-f6ea-11ea-8ea8-0875ea1afdb7.png)
 
-Switch to preferences
+
+#### Switch to preferences
 Edge tab
 Fraud_flag 1 
 Select color
@@ -182,11 +195,13 @@ Apply
 
 ![image](https://user-images.githubusercontent.com/41034062/93112754-f1ef6680-f6ea-11ea-92cc-260aa110b218.png)
 
-Fraud_flag = 1 edges will be highlitghed in the color selected.
+
+#### Fraud_flag = 1 edges will be highlitghed in the color selected.
 
 ![image](https://user-images.githubusercontent.com/41034062/93112897-1a776080-f6eb-11ea-9d65-981ac737fa62.png)
 
-Separate VN and AZ from the group
+
+#### Separate VN and AZ from the group
 
 ![image](https://user-images.githubusercontent.com/41034062/93113099-56aac100-f6eb-11ea-9f45-7e7404ee2527.png)
 
